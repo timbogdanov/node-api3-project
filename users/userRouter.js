@@ -40,7 +40,13 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  // do your magic!
+  Users.getById(req.params.id)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: 'cannot fetch user' });
+    });
 });
 
 router.get('/:id/posts', (req, res) => {
