@@ -13,7 +13,10 @@ router.post('/', validateUser, (req, res) => {
       res.status(200).json(user);
     })
     .catch((error) => {
-      res.status(500).json({ message: 'unable to submit data' });
+      res.status(500).json({
+        message: 'unable to submit data',
+        error: error.message,
+      });
     });
 });
 
@@ -25,7 +28,10 @@ router.post('/:id/posts', validateUserId, (req, res) => {
       res.status(200).json(post);
     })
     .catch((error) => {
-      res.status(500).json({ message: 'unable to submit post data' });
+      res.status(500).json({
+        message: 'unable to submit post data',
+        error: error.message,
+      });
     });
 });
 
@@ -45,16 +51,33 @@ router.get('/:id', (req, res) => {
       res.status(200).json(user);
     })
     .catch((error) => {
-      res.status(500).json({ message: 'cannot fetch user' });
+      res
+        .status(500)
+        .json({ message: 'cannot fetch user', error: error.message });
     });
 });
 
 router.get('/:id/posts', (req, res) => {
-  // do your magic!
+  Users.getUserPosts(req.params.id)
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: `posts for ${req.params.id} not found`,
+        error: error.message,
+      });
+    });
 });
 
-router.delete('/:id', (req, res) => {
-  // do your magic!
+router.delete('/:id', validateUserId, (req, res) => {
+  Users.remove(req.params.id)
+    .then((deleted) => {
+      res
+        .status(201)
+        .json({ message: `deleted user id: ${req.params.id}` });
+    })
+    .catch();
 });
 
 router.put('/:id', (req, res) => {
