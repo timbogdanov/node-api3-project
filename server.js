@@ -18,4 +18,15 @@ function logger(req, res, next) {
   next();
 }
 
+function validateUserId(id) {
+  return function validateUserId(req, res, next) {
+    if (req.header.id === id) {
+      req.user = req.header.id;
+      next();
+    } else {
+      res.status(400).json({ message: 'invalid user id' });
+    }
+  };
+}
+
 module.exports = server;
