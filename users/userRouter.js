@@ -135,4 +135,6 @@ function validatePost(req, res, next) {
   }
 }
 
+router.use('/:id/posts', postsRouter);
+
 module.exports = router;

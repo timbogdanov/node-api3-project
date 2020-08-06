@@ -1,9 +1,8 @@
 const express = require('express');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 const Posts = require('./postDb');
-const { remove } = require('../users/userDb');
 
 router.get('/', (req, res) => {
   Posts.get()
@@ -40,9 +39,7 @@ router.put('/:id', (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-  const postId = req.params.id;
-
-  Posts.get(postId).then((post) => {
+  Posts.getById(req.params.id).then((post) => {
     if (post) {
       next();
     } else {
